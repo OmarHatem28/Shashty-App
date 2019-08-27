@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
-import 'Views/home.dart';
-import 'Views/postersPage.dart';
+import 'Views/startingView.dart';
+
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   final List<Tab> myTabs = <Tab>[
     Tab(text: 'Online'),
     Tab(text: 'All Songs'),
@@ -31,62 +28,9 @@ class MyApp extends StatelessWidget {
       locale: Locale('ar', 'AE'),
       title: 'Shashty',
       theme: ThemeData.dark(),
-      home: FutureBuilder(
-        future: fetchData(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-          List categories = snapshot.data['categories'];
-          categories.insert(0, {'name': 'الرئيسية'});
-          return DefaultTabController(
-            length: categories.length,
-            child: Scaffold(
-              backgroundColor: Colors.black,
-              appBar: buildAppBar(categories),
-              body: TabBarView(
-                children: categories.map((category) {
-                  return buildNavPage(category['name'], snapshot.data);
-                }).toList(),
-              ),
-            ),
-          );
-        },
-      ),
+      home: StartingView(),
     );
   }
 
-  Widget buildAppBar(List categories) {
-    return AppBar(
-      backgroundColor: Colors.black,
-      title: Icon(Icons.live_tv),
-      centerTitle: true,
-      bottom: TabBar(
-        tabs: categories.map((category) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(category['name']),
-          );
-        }).toList(),
-        isScrollable: true,
-        indicatorColor: Colors.red,
-      ),
-      actions: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(Icons.search),
-        ),
-      ],
-    );
-  }
 
-  Widget buildNavPage(String name, data) {
-    if (name == 'الرئيسية') return Home(data: data,);
-    return PostersPage();
-  }
-
-  Future<Map> fetchData() async {
-    var url = 'http://shashtyapi.sports-mate.net/api/Home';
-    http.Response response = await http.get(url);
-    return json.decode(response.body);
-  }
 }
-
