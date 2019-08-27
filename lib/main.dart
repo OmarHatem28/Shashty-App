@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'Views/home.dart';
-import 'Views/homePage.dart';
+import 'Views/postersPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
               appBar: buildAppBar(categories),
               body: TabBarView(
                 children: categories.map((category) {
-                  return buildNavPage(category['name']);
+                  return buildNavPage(category['name'], snapshot.data);
                 }).toList(),
               ),
             ),
@@ -76,18 +76,14 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Widget buildNavPage(String name) {
-    if (name == 'الرئيسية') return HomePage();
-    print("name: $name");
-    return Container();
+  Widget buildNavPage(String name, data) {
+    if (name == 'الرئيسية') return Home(data: data,);
+    return PostersPage();
   }
 
   Future<Map> fetchData() async {
     var url = 'http://shashtyapi.sports-mate.net/api/Home';
-
     http.Response response = await http.get(url);
-
-    print(json.decode(response.body)['categories']);
     return json.decode(response.body);
   }
 }
