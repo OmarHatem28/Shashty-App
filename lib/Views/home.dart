@@ -12,11 +12,14 @@ class Home extends StatelessWidget {
       child: Column(
         children: <Widget>[
           buildSwiper(data['slider']),
-          buildHorizontalList(data['topViews']),
-          buildHorizontalList(data['suggested']),
-          buildHorizontalList(data['suggested']),
-          buildHorizontalList(data['suggested']),
-          buildHorizontalList(data['suggested']),
+          buildHorizontalList(data['topViews'], "اكتر مشاهده"),
+          buildHorizontalList(data['persons'], "مشاهير", circle: true),
+          buildHorizontalList(data['showSoon'], "يعرض قريبا"),
+          buildHorizontalList(data['showNow'], "يعرض الان"),
+          buildHorizontalList(data['suggested'], "مقترح لك"),
+          buildHorizontalList(data['topRated'], "الاكثر تقيما"),
+          buildHorizontalList(data['topFavourite'], "الاكثر تفضيلا"),
+          buildHorizontalList(data['channels'], "قنوات", circle: true),
         ],
       ),
     );
@@ -42,28 +45,47 @@ class Home extends StatelessWidget {
     );
   }
 
-  Widget buildHorizontalList(List data) {
-    return Container(
-      padding: EdgeInsets.only(bottom: 8, top: 8),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        itemCount: data.length,
-        itemBuilder: (context, i) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 8,right: 8),
-            child: Container(
-              height: 100,
-              width: 100,
-              child: GridTile(
-                child: Image.asset('assets/images/img.jpg'),
-                footer: Text(data[i]['name']),
-              ),
-            ),
-          );
-        },
-      ),
-      height: 150,
+  Widget buildHorizontalList(List data, String title, {bool circle = false}) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: <Widget>[
+              Text(title, style: TextStyle(fontSize: 24),),
+              Spacer(),
+              Icon(Icons.grid_on)
+            ],
+          ),
+        ),
+        Container(
+//          padding: EdgeInsets.only(bottom: 8, top: 8),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            physics: BouncingScrollPhysics(),
+            itemCount: data.length,
+            itemBuilder: (context, i) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 8, right: 8),
+                child: circle
+                    ? CircleAvatar(
+                        backgroundImage: AssetImage('assets/images/img.jpg'),
+                        radius: 70,
+                      )
+                    : Container(
+                        height: 100,
+                        width: 100,
+                        child: GridTile(
+                          child: Image.asset('assets/images/img.jpg', fit: BoxFit.cover,),
+                          footer: Text(data[i]['name']),
+                        ),
+                      ),
+              );
+            },
+          ),
+          height: 150,
+        ),
+      ],
     );
   }
 }

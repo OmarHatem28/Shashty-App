@@ -40,6 +40,7 @@ class MyApp extends StatelessWidget {
           return DefaultTabController(
             length: categories.length,
             child: Scaffold(
+              backgroundColor: Colors.black,
               appBar: buildAppBar(categories),
               body: TabBarView(
                 children: categories.map((category) {
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
 
   Widget buildAppBar(List categories) {
     return AppBar(
+      backgroundColor: Colors.black,
       title: Icon(Icons.live_tv),
       centerTitle: true,
       bottom: TabBar(
