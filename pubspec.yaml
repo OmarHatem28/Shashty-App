@@ -29,6 +29,7 @@ dependencies:
   flutter_swiper: 1.1.6
   font_awesome_flutter: 8.5.0
   bordered_text: 0.1.4
+  shared_preferences: 0.5.3+4
 
 dev_dependencies:
   flutter_test:

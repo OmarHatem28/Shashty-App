@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shashty/Models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -171,9 +172,32 @@ class _LoginState extends State<Login> {
 //    };
     var response = await http
         .post('http://shashtyapi.sports-mate.net/api/auth/login', body: body)
-        .then((response) {
-          User user = User.fromJson(json.decode(response.body));
-          print(json.decode(response.body)['user']['name']);
+        .then((response) async {
+      User user = User.fromJson(json.decode(response.body)['user']);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setInt('user_id', user.id);
+      prefs.setString('user_name', user.name);
+      prefs.setString('user_email', user.email);
+      prefs.setString('user_phone', user.phone);
+      prefs.setString('user_image', user.image);
+
+      Navigator.pop(context);
+    }, onError: (err) {
+      showDialog(
+          context: context,
+          child: AlertDialog(
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Close"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+            title: Text("Error"),
+            content:
+                Text("Network Error, Please Check your network connection"),
+          ));
     });
   }
 }
