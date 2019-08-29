@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:shashty/Models/user.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -10,6 +13,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   String email, password;
   bool _autoValidate = false;
+  bool progressIndicator = false;
 
   @override
   Widget build(BuildContext context) {
@@ -113,9 +117,7 @@ class _LoginState extends State<Login> {
                         Container(
                           child: Icon(FontAwesomeIcons.facebookF),
                           decoration: BoxDecoration(
-                            color: Colors.indigo,
-                            shape: BoxShape.circle
-                          ),
+                              color: Colors.indigo, shape: BoxShape.circle),
                           padding: EdgeInsets.all(8),
                         ),
                         Container(
@@ -123,9 +125,7 @@ class _LoginState extends State<Login> {
                             FontAwesomeIcons.google,
                           ),
                           decoration: BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle
-                          ),
+                              color: Colors.red, shape: BoxShape.circle),
                           padding: EdgeInsets.all(8),
                         ),
                       ],
@@ -157,7 +157,23 @@ class _LoginState extends State<Login> {
   }
 
   void validate() {
-    if (_formKey.currentState.validate()) _formKey.currentState.save();
-    else _autoValidate = true;
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      loginUser();
+    } else
+      _autoValidate = true;
+  }
+
+  void loginUser() async {
+    var body = {"email": email, "password": password};
+//    var headers = {
+//      "Content-Type": "application/json"
+//    };
+    var response = await http
+        .post('http://shashtyapi.sports-mate.net/api/auth/login', body: body)
+        .then((response) {
+          User user = User.fromJson(json.decode(response.body));
+          print(json.decode(response.body)['user']['name']);
+    });
   }
 }
