@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatelessWidget {
   final data;
 
   const Home({Key key, @required this.data}) : super(key: key);
+
+  final String url = "http://shashtyapi.sports-mate.net/public/";
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +22,10 @@ class Home extends StatelessWidget {
           buildHorizontalList(data['suggested'], "مقترح لك"),
           buildHorizontalList(data['topRated'], "الاكثر تقيما"),
           buildHorizontalList(data['topFavourite'], "الاكثر تفضيلا"),
-          buildHorizontalList(data['channels'], "قنوات", circle: true),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: buildHorizontalList(data['channels'], "قنوات", circle: true),
+          ),
         ],
       ),
     );
@@ -31,9 +37,12 @@ class Home extends StatelessWidget {
       child: Swiper(
         outer: false,
         itemBuilder: (context, i) {
-          return Image.asset('assets/images/img.jpg');
+          return Image.network(
+            url + slider[i]['image'],
+            fit: BoxFit.fill,
+          );
         },
-        autoplay: true,
+//        autoplay: true,
         duration: 300,
         pagination: new SwiperPagination(
           margin: new EdgeInsets.all(5.0),
@@ -52,9 +61,12 @@ class Home extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: <Widget>[
-              Text(title, style: TextStyle(fontSize: 24),),
+              Text(
+                title,
+                style: TextStyle(fontSize: 24),
+              ),
               Spacer(),
-              Icon(Icons.grid_on)
+              Icon(FontAwesomeIcons.th, size: 15),
             ],
           ),
         ),
@@ -70,14 +82,45 @@ class Home extends StatelessWidget {
                 child: circle
                     ? CircleAvatar(
                         backgroundImage: AssetImage('assets/images/img.jpg'),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(url + data[i]['image']),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              child: Center(
+                                child: Text(
+                                  data[i]['name'],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                         radius: 70,
                       )
                     : Container(
                         height: 100,
                         width: 100,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(image: AssetImage('assets/images/img.jpg'), fit: BoxFit.cover),
+                        ),
                         child: GridTile(
-                          child: Image.asset('assets/images/img.jpg', fit: BoxFit.cover,),
-                          footer: Text(data[i]['name']),
+                          child: Image.network(
+                            url + data[i]['image'],
+                            fit: BoxFit.fill,
+                          ),
+                          footer: Icon(
+                            Icons.arrow_drop_down,
+                            size: 25,
+                          ),
                         ),
                       ),
               );
