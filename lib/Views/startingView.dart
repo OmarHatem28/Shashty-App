@@ -69,11 +69,18 @@ class StartingView extends StatelessWidget {
                 width: 150,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/images/img.jpg'), fit: BoxFit.cover),
+                        image: AssetImage('assets/images/img.jpg'),
+                        fit: BoxFit.cover),
                     shape: BoxShape.circle,
                     border: Border.all(color: Colors.red, width: 5)),
               ),
-              Text("تسجيل الدخول", style: TextStyle(fontSize: 28),)
+              InkWell(
+                onTap: () => Navigator.pushNamed(context, 'login'),
+                child: Text(
+                  "تسجيل الدخول",
+                  style: TextStyle(fontSize: 28),
+                ),
+              ),
             ],
           ),
           ListTile(
