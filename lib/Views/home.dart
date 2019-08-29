@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bordered_text/bordered_text.dart';
 
 class Home extends StatelessWidget {
   final data;
@@ -94,13 +95,18 @@ class Home extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              child: Center(
-                                child: Text(
-                                  data[i]['name'],
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                BorderedText(
+                                  strokeWidth: 8.0,
+                                  strokeColor: Colors.black,
+                                  child: Text(
+                                    data[i]['name'],
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                              ),
+                              ],
                             )
                           ],
                         ),
@@ -110,7 +116,9 @@ class Home extends StatelessWidget {
                         height: 100,
                         width: 100,
                         decoration: BoxDecoration(
-                          image: DecorationImage(image: AssetImage('assets/images/img.jpg'), fit: BoxFit.cover),
+                          image: DecorationImage(
+                              image: AssetImage('assets/images/img.jpg'),
+                              fit: BoxFit.cover),
                         ),
                         child: GridTile(
                           child: Image.network(
