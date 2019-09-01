@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(),
       home: StartingView(),
       routes: {
+        'start': (context) => StartingView(),
         'login': (context) => Login(),
         'signup': (context) => Signup(),
       },

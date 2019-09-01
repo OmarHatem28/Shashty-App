@@ -130,6 +130,7 @@ class _LoginState extends State<Login> {
         hasFloatingPlaceholder: true,
       ),
       onSaved: (v) {
+        v = v.trim();
         email = v;
       },
       validator: (v) {
@@ -206,6 +207,7 @@ class _LoginState extends State<Login> {
     await http
         .post('http://shashtyapi.sports-mate.net/api/auth/login', body: body)
         .then((response) async {
+          print(response.body);
       User user = User.fromJson(json.decode(response.body)['user']);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -216,7 +218,9 @@ class _LoginState extends State<Login> {
       prefs.setString('user_phone', user.phone);
       prefs.setString('user_image', user.image);
 
-      Navigator.pop(context);
+      print(prefs.get('user_image'));
+
+      Navigator.pushNamedAndRemoveUntil(context, "start", (r) => false);
     }, onError: (err) {
       showDialog(
           context: context,

@@ -258,7 +258,7 @@ class _SignupState extends State<Signup> {
       prefs.setString('user_image', user.image);
 
       print(prefs.get('user_email'));
-      Navigator.pop(context);
+      Navigator.pushNamedAndRemoveUntil(context, "start", (r) => false);
     }, onError: (err) {
       showDialog(
           context: context,
