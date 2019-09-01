@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'Views/login.dart';
+import 'Views/signup.dart';
 import 'Views/startingView.dart';
 
 
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       home: StartingView(),
       routes: {
         'login': (context) => Login(),
-        'signup': (context) => Login(),
+        'signup': (context) => Signup(),
       },
     );
   }

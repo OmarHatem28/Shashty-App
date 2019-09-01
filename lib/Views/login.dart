@@ -19,141 +19,174 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.fromLTRB(10, 50, 10, 30),
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 150,
-              width: 150,
-              margin: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                    image: AssetImage('assets/images/img.jpg'),
-                    fit: BoxFit.cover),
-              ),
-            ),
-            Form(
-              key: _formKey,
-              autovalidate: _autoValidate,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.email),
-                        labelText: "البريد الالكتروني",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        hasFloatingPlaceholder: true,
-                      ),
-                      onSaved: (v) {
-                        email = v;
-                      },
-                      validator: (v) {
-                        v = v.trim();
-                        Pattern pattern =
-                            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                        RegExp regex = new RegExp(pattern);
-                        if (v.isEmpty || !regex.hasMatch(v))
-                          return 'Enter Valid Email';
-                        else
-                          return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
-                        labelText: "كلمة المرور",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        hasFloatingPlaceholder: true,
-                      ),
-                      onSaved: (v) {
-                        password = v;
-                      },
-                      validator: (v) {
-                        if (v.isEmpty || v.length < 6)
-                          return 'Password must be at least 6 alpha-numeric characters';
-                        else
-                          return null;
-                      },
-                    ),
-                  ),
-                  InkWell(
-                    child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.all(8),
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.fromLTRB(10, 50, 10, 30),
+            child: Column(
+              children: <Widget>[
+                buildLogo(),
+                buildForm(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("او"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: buildSocialMediaLoginRow(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text("ليس لديك حساب؟"),
+                    InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "هل نسيت كلمة السر؟",
-                          textAlign: TextAlign.start,
-                        )),
-                    onTap: () => print("HI"),
-                  ),
-                  RaisedButton(
-                    color: Colors.red,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    child: Text("تسجيل الدخول"),
-                    onPressed: () => validate(),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("او"),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Container(
-                          child: Icon(FontAwesomeIcons.facebookF),
-                          decoration: BoxDecoration(
-                              color: Colors.indigo, shape: BoxShape.circle),
-                          padding: EdgeInsets.all(8),
+                          "انشاء حساب",
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
                         ),
-                        Container(
-                          child: Icon(
-                            FontAwesomeIcons.google,
-                          ),
-                          decoration: BoxDecoration(
-                              color: Colors.red, shape: BoxShape.circle),
-                          padding: EdgeInsets.all(8),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("ليس لديك حساب؟"),
-                      InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            "انشاء حساب",
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        onTap: () => print("Signup"),
-                      )
-                    ],
-                  )
-                ],
-              ),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, 'signup'),
+                    )
+                  ],
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+          Container(
+            height: 70,
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+          )
+        ],
       ),
+    );
+  }
+
+  Widget buildLogo() {
+    return Container(
+      height: 150,
+      width: 150,
+      margin: EdgeInsets.only(bottom: 20, top: 40),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        image: DecorationImage(
+            image: AssetImage('assets/images/img.jpg'),
+            fit: BoxFit.cover),
+      ),
+    );
+  }
+
+  Widget buildForm() {
+    return Form(
+      key: _formKey,
+      autovalidate: _autoValidate,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: buildEmailField(),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: buildPasswordField(),
+          ),
+          InkWell(
+            child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  "هل نسيت كلمة السر؟",
+                  textAlign: TextAlign.start,
+                )),
+            onTap: () => print("HI"),
+          ),
+          RaisedButton(
+            color: Colors.red,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Text("تسجيل الدخول"),
+            onPressed: () => validate(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmailField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.email),
+        labelText: "البريد الالكتروني",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        hasFloatingPlaceholder: true,
+      ),
+      onSaved: (v) {
+        email = v;
+      },
+      validator: (v) {
+        v = v.trim();
+        Pattern pattern =
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+        RegExp regex = new RegExp(pattern);
+        if (v.isEmpty || !regex.hasMatch(v))
+          return 'Enter Valid Email';
+        else
+          return null;
+      },
+    );
+  }
+
+  Widget buildPasswordField() {
+    return TextFormField(
+      obscureText: true,
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.lock),
+        labelText: "كلمة المرور",
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        hasFloatingPlaceholder: true,
+      ),
+      onSaved: (v) {
+        password = v;
+      },
+      validator: (v) {
+        if (v.isEmpty || v.length < 6)
+          return 'Password must be at least 6 alpha-numeric characters';
+        else
+          return null;
+      },
+    );
+  }
+
+  Widget buildSocialMediaLoginRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        Container(
+          child: Icon(FontAwesomeIcons.facebookF),
+          decoration: BoxDecoration(
+              color: Colors.indigo, shape: BoxShape.circle),
+          padding: EdgeInsets.all(8),
+        ),
+        Container(
+          child: Icon(
+            FontAwesomeIcons.google,
+          ),
+          decoration: BoxDecoration(
+              color: Colors.red, shape: BoxShape.circle),
+          padding: EdgeInsets.all(8),
+        ),
+      ],
     );
   }
 
