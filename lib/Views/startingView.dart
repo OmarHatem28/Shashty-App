@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home.dart';
 import 'postersPage.dart';
@@ -64,15 +65,20 @@ class StartingView extends StatelessWidget {
         children: <Widget>[
           Column(
             children: <Widget>[
-              Container(
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/images/img.jpg'),
-                        fit: BoxFit.cover),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.red, width: 5)),
+              FutureBuilder(
+                future: getUserImage(),
+                builder: (context, snapshot) {
+                  return Container(
+                    height: 150,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: snapshot.hasData ? AssetImage(snapshot.data) : AssetImage('assets/images/img.jpg'),
+                            fit: BoxFit.cover),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.red, width: 5)),
+                  );
+                },
               ),
               InkWell(
                 onTap: () => Navigator.pushNamed(context, 'login'),
@@ -116,5 +122,11 @@ class StartingView extends StatelessWidget {
     var url = 'http://shashtyapi.sports-mate.net/api/Home';
     http.Response response = await http.get(url);
     return json.decode(response.body);
+  }
+
+  Future<String> getUserImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.get('user_image') ?? 'assets/images/img.jpg';
   }
 }

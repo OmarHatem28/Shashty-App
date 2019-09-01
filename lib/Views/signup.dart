@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shashty/Models/user.dart';
+import 'package:http/http.dart' as http;
 
 class Signup extends StatefulWidget {
   @override
@@ -187,8 +192,7 @@ class _SignupState extends State<Signup> {
         },
         validator: (v) {
           var password = passKey.currentState.value;
-          if ( v.isEmpty || v != password)
-            return "Passwords must match";
+          if (v.isEmpty || v != password) return "Passwords must match";
           return null;
         },
       ),
@@ -226,8 +230,49 @@ class _SignupState extends State<Signup> {
   void validate() {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-//      loginUser();
+      registerUser();
     } else
       _autoValidate = true;
+  }
+
+  void registerUser() async {
+    var body = {
+      "name": name,
+      "email": email,
+      "password": password,
+      "phone": phone,
+      "token_id": "123456"
+    };
+
+    await http
+        .post('http://shashtyapi.sports-mate.net/api/auth/register', body: body)
+        .then((response) async {
+      User user = User.fromJson(json.decode(response.body)['user']);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      prefs.setInt('user_id', user.id);
+      prefs.setString('user_name', user.name);
+      prefs.setString('user_email', user.email);
+      prefs.setString('user_phone', user.phone);
+      prefs.setString('user_image', user.image);
+
+      print(prefs.get('user_email'));
+      Navigator.pop(context);
+    }, onError: (err) {
+      showDialog(
+          context: context,
+          child: AlertDialog(
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Close"),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+            title: Text("Error"),
+            content:
+                Text("Network Error, Please Check your network connection"),
+          ));
+    });
   }
 }

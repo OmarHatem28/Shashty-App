@@ -203,7 +203,7 @@ class _LoginState extends State<Login> {
 //    var headers = {
 //      "Content-Type": "application/json"
 //    };
-    var response = await http
+    await http
         .post('http://shashtyapi.sports-mate.net/api/auth/login', body: body)
         .then((response) async {
       User user = User.fromJson(json.decode(response.body)['user']);
