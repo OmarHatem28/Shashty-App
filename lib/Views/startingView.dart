@@ -7,6 +7,10 @@ import 'home.dart';
 import 'postersPage.dart';
 
 class StartingView extends StatelessWidget {
+  List categories = [
+    {'name': 'الرئيسية'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -14,8 +18,7 @@ class StartingView extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData)
           return Center(child: CircularProgressIndicator());
-        List categories = snapshot.data['categories'];
-        categories.insert(0, {'name': 'الرئيسية'});
+        categories.addAll(snapshot.data['categories']);
         return DefaultTabController(
           length: categories.length,
           child: Scaffold(
@@ -73,7 +76,9 @@ class StartingView extends StatelessWidget {
                     width: 150,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                            image: snapshot.hasData ? AssetImage(snapshot.data) : AssetImage('assets/images/img.jpg'),
+                            image: snapshot.hasData
+                                ? AssetImage(snapshot.data)
+                                : AssetImage('assets/images/img.jpg'),
                             fit: BoxFit.cover),
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.red, width: 5)),
